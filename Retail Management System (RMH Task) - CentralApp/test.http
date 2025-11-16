@@ -1,0 +1,19 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+GET https://localhost:7169/product
+
+### Get all values
+GET https://localhost:7169/api/values
+
+### Create a new item
+POST https://localhost:7169/product
+Content-Type: application/json
+
+{
+  "name": "Dimitar",
+  "description": "daaa",
+  "price": "5",
+  "minprice":"3",
+  "storeid":"f253d452-0fd1-450b-b4cd-f3d898ac49c2"
+}
+
+

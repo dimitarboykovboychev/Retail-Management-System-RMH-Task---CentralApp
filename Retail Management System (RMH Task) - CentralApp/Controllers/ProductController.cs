@@ -10,15 +10,11 @@ namespace CentralApp.Controllers
     [Route("[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly ILogger<ProductController> _logger;
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly IProductService _productService;
 
-        public ProductController(ILogger<ProductController> logger,
-                                 IPublishEndpoint publishEndpoint,
-                                  IProductService productService)
+        public ProductController(IPublishEndpoint publishEndpoint, IProductService productService)
         {
-            _logger = logger;
             _publishEndpoint = publishEndpoint;
             _productService = productService;
         }
@@ -28,8 +24,7 @@ namespace CentralApp.Controllers
         {
             await _productService.CreateProductAsync(product);
 
-            await _publishEndpoint.Publish(new CreateProduct(product), 
-                                            context => context.SetRoutingKey($"{product.StoreId}.product")
+            await _publishEndpoint.Publish(new CreateProduct(product), context => context.SetRoutingKey($"{product.StoreId}.product")
 );
             return Ok(product);
         }
