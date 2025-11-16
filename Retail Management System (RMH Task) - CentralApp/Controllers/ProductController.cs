@@ -24,17 +24,18 @@ namespace CentralApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Product product)
+        public async Task<IActionResult> Create(ProductExtended product)
         {
             await _productService.CreateProductAsync(product);
 
-            // await _publishEndpoint.Publish(); topic for product created can be published here
-
+            await _publishEndpoint.Publish(new CreateProduct(product), 
+                                            context => context.SetRoutingKey($"{product.StoreId}.product")
+);
             return Ok(product);
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Product>> GetProducts()
+        public async Task<IEnumerable<ProductExtended>> GetProducts()
         {
             return await _productService.GetProductsAsync();
         }

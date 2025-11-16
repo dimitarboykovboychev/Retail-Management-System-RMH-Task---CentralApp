@@ -17,7 +17,7 @@ namespace CentralApp.Messages
         {
             var message = context.Message;
             
-            await _productService.CreateProductAsync(new Product()
+            await _productService.CreateProductAsync(new ProductExtended()
             {
                 ProductId = message.Product.ProductId,
                 StoreId = message.StoreId,

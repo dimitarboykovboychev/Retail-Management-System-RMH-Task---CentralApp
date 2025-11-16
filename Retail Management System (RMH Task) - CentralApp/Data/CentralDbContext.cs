@@ -8,18 +8,18 @@ namespace CentralApp.Data
         public CentralDbContext(DbContextOptions<CentralDbContext> options)
             : base(options) { }
 
-        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductExtended> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Product>()
+            modelBuilder.Entity<ProductExtended>()
                 .Property(p => p.Name)
                 .IsRequired()
                 .HasMaxLength(100);
-            
-            modelBuilder.Entity<Product>()
+
+            modelBuilder.Entity<ProductExtended>()
                 .Property(p => p.Description)
                 .HasMaxLength(500);
         }

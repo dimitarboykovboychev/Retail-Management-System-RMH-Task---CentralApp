@@ -15,7 +15,7 @@ namespace CentralApp.Services
             _logger = logger;
         }
 
-        public async Task<Product> CreateProductAsync(Product product)
+        public async Task<ProductExtended> CreateProductAsync(ProductExtended product)
         {
             try
             {
@@ -41,24 +41,24 @@ namespace CentralApp.Services
             }
         }
 
-        public Task DeleteProductAsync(Product product)
+        public Task DeleteProductAsync(ProductExtended product)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Product> GetProductByIdAsync(Guid productId)
+        public Task<ProductExtended> GetProductByIdAsync(Guid productId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Product> GetProductByNameAsync(string name)
+        public Task<ProductExtended> GetProductByNameAsync(string name)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Product>> GetProductsAsync()
+        public async Task<IEnumerable<ProductExtended>> GetProductsAsync()
         {
-            var products = new List<Product>();
+            var products = new List<ProductExtended>();
 
             try
             {
@@ -74,12 +74,12 @@ namespace CentralApp.Services
             }
         }
 
-        public Task<IEnumerable<Product>> GetProductsByStoreIdAsync(Guid storeId)
+        public Task<IEnumerable<ProductExtended>> GetProductsByStoreIdAsync(Guid storeId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Product> UpdateProductAsync(Product product)
+        public async Task<ProductExtended> UpdateProductAsync(ProductExtended product)
         {
             if (await _dbContext.Products.AnyAsync(p => p.Name == product.Name))
             {
@@ -104,7 +104,7 @@ namespace CentralApp.Services
             return null;
         }
 
-        private bool ValidateProduct(Product product)
+        private bool ValidateProduct(ProductExtended product)
         {
             if(string.IsNullOrWhiteSpace(product.Name) || product.Price < 0 || product.MinPrice < 0)
             {
