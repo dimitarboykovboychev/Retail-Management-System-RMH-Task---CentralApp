@@ -1,0 +1,21 @@
+﻿namespace CentralApp.Models
+{
+    public class Product
+    {
+        public Guid ProductId { get; set; }
+
+        public Guid StoreId { get; set; }
+
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public decimal Price { get; set; }
+
+        public decimal MinPrice { get; set; }
+
+        public DateTime CreatedOn { get; set; }
+
+        public DateTime UpdatedOn { get; set; }
+    }
+}
