@@ -1,8 +1,9 @@
-﻿using CentralApp.Models;
+﻿using CentralApp.Messages;
+using CentralApp.Models;
 using CentralApp.Services;
 using MassTransit;
 
-namespace CentralApp.Messages
+namespace CentralApp.Consumers
 {
     public class ProductDeletedConsumer: IConsumer<ProductDeleted>
     {
@@ -21,7 +22,7 @@ namespace CentralApp.Messages
             
             await _productService.DeleteProductAsync(message.ProductId);
 
-            _logger.LogInformation("Product with ID {ProductId} deleted for Store ID {StoreId}", message.ProductId, message.StoreId);
+            _logger.LogInformation($"Product with ID {message.ProductId} deleted for Store ID {message.StoreID}");
 
             await Task.CompletedTask;
         }

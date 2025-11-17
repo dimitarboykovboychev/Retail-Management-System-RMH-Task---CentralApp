@@ -1,8 +1,9 @@
-﻿using CentralApp.Models;
+﻿using CentralApp.Messages;
+using CentralApp.Models;
 using CentralApp.Services;
 using MassTransit;
 
-namespace CentralApp.Messages
+namespace CentralApp.Consumers
 {
     public class ProductCreatedConsumer : IConsumer<ProductCreated>
     {
@@ -22,7 +23,7 @@ namespace CentralApp.Messages
             await _productService.CreateProductAsync(new ProductExtended()
             {
                 ProductId = message.Product.ProductId,
-                StoreId = message.StoreId,
+                StoreId = message.StoreID,
                 Name = message.Product.Name,
                 Description = message.Product.Description,
                 Price = message.Product.Price,
@@ -31,7 +32,7 @@ namespace CentralApp.Messages
                 UpdatedOn = message.Product.UpdatedOn
             });
 
-            _logger.LogInformation("Product created: {ProductId} for Store: {StoreId}", message.Product.ProductId, message.StoreId);
+            _logger.LogInformation($"Product created: {message.Product.ProductId} for Store: {message.StoreID}");
 
             await Task.CompletedTask;
         }

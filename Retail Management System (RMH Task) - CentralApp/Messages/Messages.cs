@@ -2,16 +2,12 @@
 
 namespace CentralApp.Messages
 {
-    public record ProductCreated(Guid StoreId, Product Product);
+    public record ProductCreated(Guid StoreID, Product Product);
 
-    public record ProductDeleted(Guid StoreId, Guid ProductId);
+    public record ProductDeleted(Guid StoreID, Guid ProductId);
 
-    public record CreateProduct(ProductExtended Product);
 
-    public record DeleteProduct(Guid StoreId, Guid ProductId);
+    public record CreateProduct(ProductExtended ProductExtended);
 
-    public static class MessageQueues
-    {
-        public const string ProductQueue = "product-queue";
-    }
+    public record DeleteProduct(Guid StoreID, Guid ProductId);
 }

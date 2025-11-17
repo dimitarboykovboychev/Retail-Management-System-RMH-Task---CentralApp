@@ -1,3 +1,4 @@
+using CentralApp.Consumers;
 using CentralApp.Data;
 using CentralApp.Messages;
 using CentralApp.Services;
@@ -5,6 +6,8 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var centralQueue = builder.Configuration.GetValue<string>("MessageQueue:CentralQueue");
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -31,7 +34,7 @@ builder.Services.AddMassTransit(x =>
             if(!string.IsNullOrWhiteSpace(password)) h.Password(password);
         });
 
-        cfg.ReceiveEndpoint(MessageQueues.ProductQueue, e =>
+        cfg.ReceiveEndpoint(centralQueue, e =>
         {
             e.ConfigureConsumer<ProductCreatedConsumer>(context);
             e.ConfigureConsumer<ProductDeletedConsumer>(context);

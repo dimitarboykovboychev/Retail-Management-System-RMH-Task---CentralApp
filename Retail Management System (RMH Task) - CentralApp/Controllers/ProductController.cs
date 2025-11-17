@@ -24,7 +24,9 @@ namespace CentralApp.Controllers
         {
             await _productService.CreateProductAsync(product);
 
-            await _publishEndpoint.Publish(new CreateProduct(product), context => context.SetRoutingKey($"{product.StoreId}.product")
+            var storeID = "35ae9dcb-7ba0-4929-baea-d339b5e4523a"; // Example store ID for routing key
+
+            await _publishEndpoint.Publish(new CreateProduct(product), context => context.SetRoutingKey($"{storeID/*product.StoreId*/}.product")
 );
             return Ok(product);
         }
