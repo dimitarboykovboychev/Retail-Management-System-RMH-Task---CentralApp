@@ -17,23 +17,25 @@ builder.Services.AddDbContext<CentralDbContext>(options =>
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<ProductCreatedConsumer>();
+    x.AddConsumer<ProductDeletedConsumer>();
 
-    //x.UsingRabbitMq((context, cfg) =>
-    //{
-    //    var host = builder.Configuration.GetValue<string>("RabbitMq:Host") ?? "localhost";
-    //    var username = builder.Configuration.GetValue<string>("RabbitMq:Username");
-    //    var password = builder.Configuration.GetValue<string>("RabbitMq:Password");
-
-    //    cfg.Host(host, h =>
-    //    {
-    //        if(!string.IsNullOrWhiteSpace(username)) h.Username(username);
-    //        if(!string.IsNullOrWhiteSpace(password)) h.Password(password);
-    //    });
-    //});
-
-    x.UsingInMemory((context, cfg) =>
+    x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.ConfigureEndpoints(context);
+        var host = builder.Configuration.GetValue<string>("RabbitMq:Host") ?? "localhost";
+        var username = builder.Configuration.GetValue<string>("RabbitMq:Username");
+        var password = builder.Configuration.GetValue<string>("RabbitMq:Password");
+
+        cfg.Host(host, h =>
+        {
+            if(!string.IsNullOrWhiteSpace(username)) h.Username(username);
+            if(!string.IsNullOrWhiteSpace(password)) h.Password(password);
+        });
+
+        cfg.ReceiveEndpoint(MessageQueues.ProductQueue, e =>
+        {
+            e.ConfigureConsumer<ProductCreatedConsumer>(context);
+            e.ConfigureConsumer<ProductDeletedConsumer>(context);
+        });
     });
 });
 
@@ -43,8 +45,6 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.MapGet("/", () => "App is running with in-memory transport!");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

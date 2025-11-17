@@ -24,6 +24,11 @@ namespace CentralApp.Services
                     return null;
                 }
 
+                if(await _dbContext.Products.AnyAsync(p => p.Name == product.Name))
+                {
+                    return await UpdateProductAsync(product);
+                }
+
                 product.ProductId = Guid.NewGuid();
                 product.CreatedOn = DateTime.UtcNow;
                 product.UpdatedOn = DateTime.UtcNow;
@@ -41,19 +46,20 @@ namespace CentralApp.Services
             }
         }
 
-        public Task DeleteProductAsync(ProductExtended product)
+        public async Task DeleteProductAsync(Guid productId)
         {
-            throw new NotImplementedException();
+            if (_dbContext.Products.Any(p => p.ProductId == productId))
+            {
+                var product = _dbContext.Products.Single(p => p.ProductId == productId);
+
+                _dbContext.Products.Remove(product);
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
-        public Task<ProductExtended> GetProductByIdAsync(Guid productId)
+        public async Task<ProductExtended> GetProductByNameAsync(string name)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<ProductExtended> GetProductByNameAsync(string name)
-        {
-            throw new NotImplementedException();
+            return await _dbContext.Products.SingleOrDefaultAsync(p => p.Name == name);
         }
 
         public async Task<IEnumerable<ProductExtended>> GetProductsAsync()
@@ -74,66 +80,60 @@ namespace CentralApp.Services
             }
         }
 
-        public Task<IEnumerable<ProductExtended>> GetProductsByStoreIdAsync(Guid storeId)
+        public async Task<IEnumerable<ProductExtended>> GetProductsByStoreIdAsync(Guid storeId)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Products.Where(p => p.StoreId == storeId).ToListAsync();
         }
 
-        public async Task<ProductExtended> UpdateProductAsync(ProductExtended product)
+        private async Task<ProductExtended> UpdateProductAsync(ProductExtended product)
         {
-            if (await _dbContext.Products.AnyAsync(p => p.Name == product.Name))
+            var existingProduct = await _dbContext.Products.SingleAsync(p => p.Name == product.Name);
+
+            existingProduct.Description = product.Description;
+            existingProduct.Price = product.Price;
+            existingProduct.MinPrice = product.MinPrice;
+            existingProduct.UpdatedOn = DateTime.UtcNow;
+
+            if (!ValidateProduct(existingProduct))
             {
-                var existingProduct = await _dbContext.Products.SingleAsync(p => p.Name == product.Name);
-
-                existingProduct.Description = product.Description;
-                existingProduct.Price = product.Price;
-                existingProduct.MinPrice = product.MinPrice;
-                existingProduct.UpdatedOn = DateTime.UtcNow;
-
-                if (!ValidateProduct(existingProduct))
-                {
-                    return null;
-                }
-
-                _dbContext.Products.Update(existingProduct);
-                await _dbContext.SaveChangesAsync();
-
-                return existingProduct;
+                return null;
             }
 
-            return null;
+            _dbContext.Products.Update(existingProduct);
+            await _dbContext.SaveChangesAsync();
+
+            return existingProduct;
         }
 
         private bool ValidateProduct(ProductExtended product)
         {
-            if(string.IsNullOrWhiteSpace(product.Name) || product.Price < 0 || product.MinPrice < 0)
+            if(string.IsNullOrWhiteSpace(product.Name) || product.Price < 0 || product.MinPrice < 0 || product.Price == 0 || product.MinPrice == 0)
             {
-                // logging can be added here
+                _logger.LogWarning("Product {ProductId} has invalid Name, Price or MinPrice.", product.ProductId);
 
                 return false;
             }
 
-            if(product.MinPrice > product.Price || product.MinPrice == 0 || product.Price == 0)
+            if(product.MinPrice > product.Price)
             {
-                // logging can be added here
+                _logger.LogWarning("Product {ProductId} has a MinPrice greater than its Price.", product.ProductId);
 
                 return false;
             }
 
             if(product.Description != null && product.Description.Length > 500)
             {
-                // logging can be added here
+                _logger.LogWarning("Product {ProductId} has a Description longer than 500 characters.", product.ProductId);
 
                 return false;
             }
 
             if(product.Name.Length > 100)
             {
-                // logging can be added here
+                _logger.LogWarning("Product {ProductId} has a Name longer than 100 characters.", product.ProductId);
 
                 return false;
             }
-
 
             return true;
         }

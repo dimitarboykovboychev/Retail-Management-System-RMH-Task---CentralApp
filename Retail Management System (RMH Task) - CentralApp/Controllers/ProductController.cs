@@ -34,5 +34,15 @@ namespace CentralApp.Controllers
         {
             return await _productService.GetProductsAsync();
         }
+
+        [HttpDelete("{storeId}/{productId}")]
+        public async Task<IActionResult> Delete(Guid storeId, Guid productId)
+        {
+            await _productService.DeleteProductAsync(productId);
+
+            await _publishEndpoint.Publish(new DeleteProduct(storeId, productId), context => context.SetRoutingKey($"{storeId}.product"));
+            
+            return NoContent();
+        }
     }
 }

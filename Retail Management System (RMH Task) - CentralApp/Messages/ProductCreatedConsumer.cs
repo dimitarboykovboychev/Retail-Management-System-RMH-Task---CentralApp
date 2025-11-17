@@ -7,10 +7,12 @@ namespace CentralApp.Messages
     public class ProductCreatedConsumer : IConsumer<ProductCreated>
     {
         private readonly IProductService _productService;
+        private readonly ILogger<ProductCreatedConsumer> _logger;
 
-        public ProductCreatedConsumer(IProductService productService)
+        public ProductCreatedConsumer(IProductService productService, ILogger<ProductCreatedConsumer> logger)
         {
             _productService = productService;
+            _logger = logger;
         }
 
         public async Task Consume(ConsumeContext<ProductCreated> context)
@@ -28,6 +30,10 @@ namespace CentralApp.Messages
                 CreatedOn = message.Product.CreatedOn,
                 UpdatedOn = message.Product.UpdatedOn
             });
+
+            _logger.LogInformation("Product created: {ProductId} for Store: {StoreId}", message.Product.ProductId, message.StoreId);
+
+            await Task.CompletedTask;
         }
     }
 }
