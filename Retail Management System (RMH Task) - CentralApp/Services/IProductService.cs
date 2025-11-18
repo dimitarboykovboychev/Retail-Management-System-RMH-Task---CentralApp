@@ -4,14 +4,14 @@
 
     public interface IProductService
     {
-        Task<ProductExtended> CreateProductAsync(ProductExtended product);
+        Task<Product> CreateProductAsync(Product product);
 
-        Task<IEnumerable<ProductExtended>> GetProductsAsync();
+        Task<IEnumerable<Product>> GetProductsAsync();
 
-        Task<ProductExtended> GetProductByNameAsync(string name);
+        Task<Product> GetProductByNameAsync(string name, Guid storeID);
 
-        Task<IEnumerable<ProductExtended>> GetProductsByStoreIdAsync(Guid storeId);
+        Task<IEnumerable<Product>> GetProductsByStoreIDAsync(Guid storeID);
 
-        Task DeleteProductAsync(Guid productId);
+        Task DeleteProductAsync(Guid productID);
     }
 }

@@ -1,18 +1,18 @@
-# For more info on HTTP files go to https://aka.ms/vs/httpfile
+### Get all values
 GET https://localhost:7169/product
 
-### Get all values
-GET https://localhost:7169/api/values
+### Delete
+DELETE https://localhost:7169/product/f253d452-0fd1-450b-b4cd-f3d898ac49c2/26284457-ce2b-412a-9ac4-eddfffee136d
 
 ### Create a new item
 POST https://localhost:7169/product
 Content-Type: application/json
 
 {
-  "name": "Orange21",
+  "name": "Dinq",
   "description": "big",
-  "price": "1515",
-  "minprice":"33",
+  "price": "15",
+  "minprice":"3",
   "storeid":"35ae9dcb-7ba0-4929-baea-d339b5e4523a"
 }
 

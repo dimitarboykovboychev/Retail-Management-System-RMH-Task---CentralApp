@@ -8,38 +8,42 @@ namespace CentralApp.Data
         public CentralDbContext(DbContextOptions<CentralDbContext> options)
             : base(options) { }
 
-        public DbSet<ProductExtended> Products { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<ProductExtended>()
-                .HasKey(p => p.ProductId);
+            modelBuilder.Entity<Product>()
+                .HasKey(p => p.ProductID);
 
-            modelBuilder.Entity<ProductExtended>()
+            modelBuilder.Entity<Product>()
+                .Property(p => p.StoreID)
+                .IsRequired();
+
+            modelBuilder.Entity<Product>()
                 .Property(p => p.Name)
                 .IsRequired()
                 .HasMaxLength(100);
 
-            modelBuilder.Entity<ProductExtended>()
+            modelBuilder.Entity<Product>()
                 .Property(p => p.Description)
                 .HasMaxLength(500);
 
-            modelBuilder.Entity<ProductExtended>()
+            modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
                 .HasColumnType("decimal(18,2)")
                 .IsRequired();
 
-            modelBuilder.Entity<ProductExtended>()
+            modelBuilder.Entity<Product>()
                 .Property(p => p.MinPrice)
                 .HasColumnType("decimal(18,2)");
 
-            modelBuilder.Entity<ProductExtended>()
+            modelBuilder.Entity<Product>()
                 .Property(p => p.CreatedOn)
                 .HasColumnType("datetime2");
 
-            modelBuilder.Entity<ProductExtended>()
+            modelBuilder.Entity<Product>()
                 .Property(p => p.UpdatedOn)
                 .HasColumnType("datetime2");
         }

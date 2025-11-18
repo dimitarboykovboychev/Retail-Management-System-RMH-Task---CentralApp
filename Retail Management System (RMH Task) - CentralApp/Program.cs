@@ -1,6 +1,5 @@
 using CentralApp.Consumers;
 using CentralApp.Data;
-using CentralApp.Messages;
 using CentralApp.Services;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;

@@ -1,7 +1,7 @@
-using CentralApp.Messages;
 using CentralApp.Models;
 using CentralApp.Services;
 using MassTransit;
+using MessageContracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CentralApp.Controllers
@@ -20,19 +20,19 @@ namespace CentralApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ProductExtended product)
+        public async Task<IActionResult> Create(Product product)
         {
             await _productService.CreateProductAsync(product);
 
             var storeID = "35ae9dcb-7ba0-4929-baea-d339b5e4523a"; // Example store ID for routing key
 
-            await _publishEndpoint.Publish(new CreateProduct(product), context => context.SetRoutingKey($"{storeID/*product.StoreId*/}.product")
-);
+            await _publishEndpoint.Publish(new CreateProduct(new ProductDTO() { ProductID = product.ProductID, StoreID = product.StoreID, Name = product.Name, Description = product.Description, Price = product.Price, MinPrice = product.MinPrice, CreatedOn = product.CreatedOn, UpdatedOn = product.UpdatedOn }),
+                context => context.SetRoutingKey($"{storeID/*product.StoreId*/}.product"));
             return Ok(product);
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ProductExtended>> GetProducts()
+        public async Task<IEnumerable<Product>> GetProducts()
         {
             return await _productService.GetProductsAsync();
         }

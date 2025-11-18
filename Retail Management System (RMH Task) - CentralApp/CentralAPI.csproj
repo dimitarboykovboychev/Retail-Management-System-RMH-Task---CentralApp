@@ -18,4 +18,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\MessageContracts\MessageContracts\MessageContracts.csproj" />
+  </ItemGroup>
+
 </Project>

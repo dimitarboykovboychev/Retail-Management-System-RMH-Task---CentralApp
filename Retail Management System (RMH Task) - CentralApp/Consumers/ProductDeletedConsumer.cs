@@ -1,7 +1,6 @@
-﻿using CentralApp.Messages;
-using CentralApp.Models;
-using CentralApp.Services;
+﻿using CentralApp.Services;
 using MassTransit;
+using MessageContracts;
 
 namespace CentralApp.Consumers
 {
@@ -19,10 +18,10 @@ namespace CentralApp.Consumers
         public async Task Consume(ConsumeContext<ProductDeleted> context)
         {
             var message = context.Message;
-            
-            await _productService.DeleteProductAsync(message.ProductId);
 
-            _logger.LogInformation($"Product with ID {message.ProductId} deleted for Store ID {message.StoreID}");
+            await _productService.DeleteProductAsync(message.ProductID);
+
+            _logger.LogInformation($"Product with ID {message.ProductID} deleted for Store ID {message.StoreID}");
 
             await Task.CompletedTask;
         }
